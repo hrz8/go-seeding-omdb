@@ -5,6 +5,8 @@ import (
 
 	Config "github.com/hrz8/go-seeding-omdb/config"
 	Database "github.com/hrz8/go-seeding-omdb/database"
+	LogRequestRepository "github.com/hrz8/go-seeding-omdb/domains/log_request/repository"
+	LogRequestUsecase "github.com/hrz8/go-seeding-omdb/domains/log_request/usecase"
 	MovieRest "github.com/hrz8/go-seeding-omdb/domains/movie/delivery/rest"
 	MovieRepository "github.com/hrz8/go-seeding-omdb/domains/movie/repository"
 	MovieUsecase "github.com/hrz8/go-seeding-omdb/domains/movie/usecase"
@@ -34,7 +36,10 @@ func main() {
 
 	movieRepo := MovieRepository.NewRepository()
 	movieUsecase := MovieUsecase.NewUsecase(movieRepo)
-	movieRest := MovieRest.NewRest(movieUsecase)
+	logRequestRepo := LogRequestRepository.NewRepository(mysqlSess)
+	logRequestUsecase := LogRequestUsecase.NewUsecase(logRequestRepo)
+
+	movieRest := MovieRest.NewRest(movieUsecase, logRequestUsecase)
 	MovieRest.RegisterEndpoint(e, movieRest)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", appConfig.SERVICE.PORT)))

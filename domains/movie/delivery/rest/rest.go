@@ -4,8 +4,10 @@ import (
 	"errors"
 	"strconv"
 
+	LogRequestUsecase "github.com/hrz8/go-seeding-omdb/domains/log_request/usecase"
 	MovieError "github.com/hrz8/go-seeding-omdb/domains/movie/error"
 	"github.com/hrz8/go-seeding-omdb/domains/movie/usecase"
+	MovieUtils "github.com/hrz8/go-seeding-omdb/domains/movie/utils"
 	"github.com/hrz8/go-seeding-omdb/models"
 	"github.com/hrz8/go-seeding-omdb/utils"
 	"github.com/labstack/echo/v4"
@@ -18,8 +20,9 @@ type (
 	}
 
 	impl struct {
-		usecase  usecase.UsecaseInterface
-		errorLib RestErrorInterface
+		usecase           usecase.UsecaseInterface
+		logRequestUsecase LogRequestUsecase.UsecaseInterface
+		errorLib          RestErrorInterface
 	}
 )
 
@@ -49,6 +52,7 @@ func (i *impl) List(c echo.Context) error {
 
 func (i *impl) Detail(c echo.Context) error {
 	ctx := c.(*utils.CustomContext)
+	go MovieUtils.LoggingToDB(ctx, i.logRequestUsecase, "rest")
 	id := ctx.Param("id")
 	result, err := i.usecase.Detail(ctx, &id)
 	if err != nil {
@@ -61,9 +65,10 @@ func (i *impl) Detail(c echo.Context) error {
 	)
 }
 
-func NewRest(u usecase.UsecaseInterface) RestInterface {
+func NewRest(u usecase.UsecaseInterface, lru LogRequestUsecase.UsecaseInterface) RestInterface {
 	return &impl{
-		usecase:  u,
-		errorLib: NewMovieError(),
+		usecase:           u,
+		logRequestUsecase: lru,
+		errorLib:          NewMovieError(),
 	}
 }

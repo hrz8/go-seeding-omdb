@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 
+	LogRequestUsecase "github.com/hrz8/go-seeding-omdb/domains/log_request/usecase"
 	MovieError "github.com/hrz8/go-seeding-omdb/domains/movie/error"
 	"github.com/hrz8/go-seeding-omdb/helpers"
 	"github.com/hrz8/go-seeding-omdb/models"
+	Utils "github.com/hrz8/go-seeding-omdb/utils"
 )
 
 type (
@@ -84,4 +86,20 @@ func FetchOmdbList(apiKey *string, payload *models.MoviePayloadList) (*omdbListR
 	}
 
 	return &data, nil
+}
+
+func LoggingToDB(ctx *Utils.CustomContext, u LogRequestUsecase.UsecaseInterface, typ string) {
+	requestUri := ctx.Context.Request().RequestURI
+	method := ctx.Context.Request().Method
+	headerTemp, err := json.Marshal(ctx.Context.Request().Header)
+	if err != nil {
+		fmt.Println(err)
+	}
+	header := string(headerTemp)
+	u.Create(ctx, &models.LogRequest{
+		Type:       typ,
+		RequestURI: requestUri,
+		Header:     header,
+		Method:     method,
+	})
 }

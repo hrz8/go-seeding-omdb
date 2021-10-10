@@ -7,7 +7,7 @@ import (
 type (
 	// LogRequest represents LogRequest object for DB
 	LogRequest struct {
-		ID         uint      `gorm:"column:id;primaryKey" json:"id"`
+		ID         uint      `gorm:"column:id;primaryKey,autoIncrement" json:"id"`
 		Type       string    `gorm:"column:type" json:"type" validate:"required"`
 		RequestURI string    `gorm:"column:request_uri" json:"requestUri"`
 		Header     string    `gorm:"column:header" json:"header"`
