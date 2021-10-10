@@ -9,7 +9,7 @@ import (
 )
 
 type (
-	movie struct {
+	omdbDetailResponse struct {
 		Title      string  `json:"Title"`
 		Year       string  `json:"Year"`
 		ImdbID     string  `json:"imdbID"`
@@ -27,18 +27,39 @@ type (
 		ImdbVotes  *string `json:"imdbVote,omitempty"`
 	}
 
-	omdbResponse struct {
-		Search       *[]movie `json:"Search"`
-		TotalResults string   `json:"totalResults"`
-		Response     string   `json:"Response"`
+	omdbListResponse struct {
+		Search       *[]omdbDetailResponse `json:"Search"`
+		TotalResults string                `json:"totalResults"`
+		Response     string                `json:"Response"`
 	}
 )
 
-func FetchOmdb(apiKey *string, payload *models.MoviePayloadList) (*omdbResponse, error) {
+func FetchOmdbDetail(apiKey *string, id *string) (*omdbDetailResponse, error) {
+	URL := fmt.Sprintf("https://www.omdbapi.com/?apikey=%s&i=%s",
+		*apiKey, *id,
+	)
+	var data omdbDetailResponse
+
+	response, err := helpers.Fetch("GET", URL)
+	if err != nil {
+		return nil, err
+	}
+
+	defer response.Body.Close()
+
+	err = json.NewDecoder(response.Body).Decode(&data)
+	if err != nil {
+		return nil, err
+	}
+
+	return &data, nil
+}
+
+func FetchOmdbList(apiKey *string, payload *models.MoviePayloadList) (*omdbListResponse, error) {
 	URL := fmt.Sprintf("https://www.omdbapi.com/?apikey=%s&s=%s&page=%d",
 		*apiKey, payload.Searchword, payload.Pagination,
 	)
-	var data omdbResponse
+	var data omdbListResponse
 
 	response, err := helpers.Fetch("GET", URL)
 	if err != nil {

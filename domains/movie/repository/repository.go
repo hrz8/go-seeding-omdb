@@ -17,7 +17,7 @@ type (
 )
 
 func (i *impl) List(apiKey *string, payload *models.MoviePayloadList) (*[]models.Movie, *int, error) {
-	response, err := utils.FetchOmdb(apiKey, payload)
+	response, err := utils.FetchOmdbList(apiKey, payload)
 	if err != nil {
 
 	}
@@ -39,7 +39,28 @@ func (i *impl) List(apiKey *string, payload *models.MoviePayloadList) (*[]models
 }
 
 func (i *impl) Detail(apiKey *string, id *string) (*models.Movie, error) {
-	return &models.Movie{}, nil
+	response, err := utils.FetchOmdbDetail(apiKey, id)
+	if err != nil {
+
+	}
+	result := &models.Movie{
+		Title:      response.Title,
+		Year:       response.Year,
+		ImdbID:     response.ImdbID,
+		Type:       response.Type,
+		Poster:     response.Poster,
+		Released:   response.Released,
+		Runtime:    response.Runtime,
+		Director:   response.Director,
+		Writer:     response.Writer,
+		Actors:     response.Actors,
+		Plot:       response.Plot,
+		Language:   response.Language,
+		Country:    response.Country,
+		ImdbRating: response.ImdbRating,
+		ImdbVotes:  response.ImdbVotes,
+	}
+	return result, nil
 }
 
 func NewRepository() RepositoryInterface {
