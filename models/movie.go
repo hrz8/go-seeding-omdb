@@ -12,8 +12,8 @@ type (
 
 	// MoviePayloadList represents query params to fetch all movies
 	MoviePayloadList struct {
-		Pagination int    `query:"pagination"`
-		Searchword string `query:"searchword"`
+		Pagination int    `query:"pagination" validate:"required"`
+		Searchword string `query:"searchword" validate:"required"`
 	}
 
 	// MoviePayloadDetail represents query params to get movie's detail
