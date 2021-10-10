@@ -28,6 +28,7 @@ type (
 
 func (i *impl) List(c echo.Context) error {
 	ctx := c.(*utils.CustomContext)
+	go MovieUtils.LoggingToDB(ctx, i.logRequestUsecase, "rest")
 	pagination, err := strconv.Atoi(ctx.QueryParam("pagination"))
 	if err != nil {
 		return i.errorLib.Throw(ctx, MovieError.List.Err, errors.New("invalid pagination data type"))
