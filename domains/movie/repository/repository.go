@@ -19,11 +19,11 @@ type (
 func (i *impl) List(apiKey *string, payload *models.MoviePayloadList) (*[]models.Movie, *int, error) {
 	response, err := utils.FetchOmdbList(apiKey, payload)
 	if err != nil {
-
+		return nil, nil, err
 	}
 	total, err := strconv.Atoi(response.TotalResults)
 	if err != nil {
-
+		return nil, nil, err
 	}
 	result := make([]models.Movie, len(*response.Search))
 	for index, movie := range *response.Search {
@@ -41,7 +41,7 @@ func (i *impl) List(apiKey *string, payload *models.MoviePayloadList) (*[]models
 func (i *impl) Detail(apiKey *string, id *string) (*models.Movie, error) {
 	response, err := utils.FetchOmdbDetail(apiKey, id)
 	if err != nil {
-
+		return nil, err
 	}
 	result := &models.Movie{
 		Title:      response.Title,

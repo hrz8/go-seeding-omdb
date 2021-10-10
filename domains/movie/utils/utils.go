@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	MovieError "github.com/hrz8/go-seeding-omdb/domains/movie/error"
 	"github.com/hrz8/go-seeding-omdb/helpers"
 	"github.com/hrz8/go-seeding-omdb/models"
 )
@@ -25,6 +26,7 @@ type (
 		Country    *string `json:"country,omitempty"`
 		ImdbRating *string `json:"imdbRating,omitempty"`
 		ImdbVotes  *string `json:"imdbVote,omitempty"`
+		Response   string  `json:"Response"`
 	}
 
 	omdbListResponse struct {
@@ -52,6 +54,10 @@ func FetchOmdbDetail(apiKey *string, id *string) (*omdbDetailResponse, error) {
 		return nil, err
 	}
 
+	if data.Response == "False" {
+		return nil, MovieError.DetailNotFound.Err
+	}
+
 	return &data, nil
 }
 
@@ -71,6 +77,10 @@ func FetchOmdbList(apiKey *string, payload *models.MoviePayloadList) (*omdbListR
 	err = json.NewDecoder(response.Body).Decode(&data)
 	if err != nil {
 		return nil, err
+	}
+
+	if data.Response == "False" {
+		return nil, MovieError.ListNotFound.Err
 	}
 
 	return &data, nil
