@@ -3,6 +3,7 @@ package utils
 import (
 	"net/http"
 	"reflect"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -32,7 +33,7 @@ func BinderError(c *CustomContext) error {
 		nil,
 		"Internal Server Error",
 		http.StatusInternalServerError,
-		"VALIDATOR-001",
+		"VALIDATOR-500",
 		nil,
 	)
 }
@@ -43,6 +44,15 @@ func ValidatorMiddleware(models reflect.Type) func(echo.HandlerFunc) echo.Handle
 			ctx := c.(*CustomContext)
 			payload := reflect.New(models).Interface()
 			if err := ctx.Bind(payload); err != nil {
+				if strings.Contains(err.Error(), "invalid syntax") {
+					return ctx.ErrorResponse(
+						nil,
+						err.Error(),
+						http.StatusBadRequest,
+						"VALIDATOR-001",
+						nil,
+					)
+				}
 				return BinderError(ctx)
 			}
 			if err := ctx.Validate(payload); err != nil {
