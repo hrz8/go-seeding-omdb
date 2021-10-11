@@ -24,6 +24,7 @@ func main() {
 	mysql := Database.NewMysql(appConfig)
 	mysqlSess := mysql.Connect()
 
+	// usecase and repos
 	movieRepo := MovieRepository.NewRepository()
 	movieUsecase := MovieUsecase.NewUsecase(movieRepo)
 	logRequestRepo := LogRequestRepository.NewRepository(mysqlSess)
