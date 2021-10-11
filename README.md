@@ -1,1 +1,1 @@
-# go-seeding-omdb/ayo-bibt-omdb
+# go-seeding-omdb/ayo-bibit-omdb
