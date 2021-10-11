@@ -20,6 +20,8 @@ type (
 		ImdbVotes  *string `json:"imdbVote,omitempty"`
 	}
 
+	MovieList []Movie
+
 	// MoviePayloadList represents query params to fetch all movies
 	MoviePayloadList struct {
 		Pagination int    `query:"pagination" validate:"required"`

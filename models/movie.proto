@@ -1,0 +1,30 @@
+syntax = "proto3";
+package models;
+
+option go_package = ".;models";
+
+message Movie {
+    string title = 1;
+    string year = 2;
+    string imdbID = 3;
+    string type = 4;
+    string poster = 5;
+}
+
+message MovieList {
+    repeated Movie list = 1;
+}
+
+message MoviePayloadList {
+    string pagination = 1;
+    string searchword = 2;
+}
+
+message MoviePayloadDetail {
+    string id = 1;
+}
+
+service Movies {
+    rpc List(MoviePayloadList) returns (MovieList) {}
+    rpc Detail(MoviePayloadDetail) returns (Movie) {}
+}

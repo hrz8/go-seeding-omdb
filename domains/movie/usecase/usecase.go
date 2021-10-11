@@ -28,6 +28,7 @@ func (i *impl) Detail(ctx *Context.CustomContext, id *string) (*models.Movie, er
 	result, err := i.repository.Detail(apiKey, id)
 	return result, err
 }
+
 func NewUsecase(r repository.RepositoryInterface) UsecaseInterface {
 	return &impl{
 		repository: r,
