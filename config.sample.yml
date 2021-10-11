@@ -1,5 +1,6 @@
 SERVICE:
-  PORT: 5000
+  RESTPORT: 5000
+  GRPCPORT: 6000
   APIKEY: yourapi
 DATABASE: 
   HOST: localhost

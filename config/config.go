@@ -9,8 +9,9 @@ import (
 
 type (
 	SERVICE struct {
-		PORT   int    `mapstructure:"PORT"`
-		APIKEY string `mapstructure:"APIKEY"`
+		RESTPORT int    `mapstructure:"RESTPORT"`
+		GRPCPORT int    `mapstructure:"GRPCPORT"`
+		APIKEY   string `mapstructure:"APIKEY"`
 	}
 	DATABASE struct {
 		HOST     string `mapstructure:"HOST"`
